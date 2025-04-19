@@ -7,6 +7,7 @@ import { ResizablePanelGroup, ResizableHandle } from '@/components/ui/resizable'
 import { Sb2novResumeData, sb2nov } from '@/lib/templates/sb2nov';
 
 export default function ResumeTemplatePage() {
+  const resumeType = 'sb2nov';
   const {
     resumeFunc,
     initialData,
@@ -20,7 +21,10 @@ export default function ResumeTemplatePage() {
     setLatexData,
     setLoading,
     slug,
-  } = useResumeData('sb2nov');
+    hasPaid,
+    productId,
+    productPrice,
+  } = useResumeData(resumeType);
   const isMobile = useIsMobile();
 
   if (isFetching) {
@@ -48,15 +52,24 @@ export default function ResumeTemplatePage() {
   }
 
   return (
-    <div className="flex justify-center p-4">
-      <div className="container mx-auto px-4 sm:px-6">
+    <div className="flex justify-center">
+      <div className="container mx-auto">
         <ResizablePanelGroup
           direction={isMobile ? 'vertical' : 'horizontal'}
           className={isMobile ? 'flex flex-col gap-4' : 'grid grid-cols-2 gap-0'}
         >
           {isMobile ? (
             <>
-              <ResumePreview imageUrl={imageUrl} latexData={latexData} loading={loading} />
+              <ResumePreview
+                imageUrl={imageUrl}
+                latexData={latexData}
+                loading={loading}
+                paymentStatus={hasPaid}
+                slug={slug as string}
+                productId={productId}
+                resumeType={resumeType}
+                productPrice={productPrice}
+              />
               <ResizableHandle className="h-4 w-full opacity-0" />
               <ResumeForm
                 onUpdate={setImageUrl}
@@ -80,7 +93,16 @@ export default function ResumeTemplatePage() {
                 title={existingResume?.title || ''}
               />
               <ResizableHandle className="w-4 opacity-0" />
-              <ResumePreview imageUrl={imageUrl} latexData={latexData} loading={loading} />
+              <ResumePreview
+                imageUrl={imageUrl}
+                latexData={latexData}
+                loading={loading}
+                paymentStatus={hasPaid}
+                slug={slug as string}
+                productId={productId}
+                resumeType={resumeType}
+                productPrice={productPrice}
+              />
             </>
           )}
         </ResizablePanelGroup>

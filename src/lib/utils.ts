@@ -83,7 +83,8 @@ export const escapeLatex = (text: string) => {
   });
 
   // Block attempts to use comments for injection
-  escaped = escaped.replace(/\\%\s*(.+)$/gm, '\\% [SANITIZED]');
+  // escaped = escaped.replace(/\\%\s*(.+)$/gm, '\\% [SANITIZED]');
+  escaped = escaped.replace(/\\%\s*(\\[a-zA-Z]+)/gm, '\\% [BLOCKED:$1]');
 
   // Block attempts to use newlines and spaces to obfuscate commands
   escaped = escaped.replace(/\\textbackslash\{\}\s+([a-zA-Z]+)/g, (match, command) => {
@@ -151,4 +152,16 @@ export const generateSlug = (title: string): string => {
   const randomString = Math.random().toString(36).substring(2, 8); // Random string
   const timestamp = Date.now(); // Timestamp
   return `${title.toLowerCase().replace(/\s+/g, '-')}-${timestamp}-${randomString}`;
+};
+
+export const getCurrencyAndAmountByRegion = (countryCode: string) => {
+  const regionPricing: Record<string, { currency: string; amount: number }> = {
+    IN: { currency: 'INR', amount: 2000 },
+    US: { currency: 'USD', amount: 50 },
+    GB: { currency: 'GBP', amount: 40 },
+    CA: { currency: 'CAD', amount: 60 },
+    AU: { currency: 'AUD', amount: 70 },
+  };
+
+  return regionPricing[countryCode] || regionPricing['IN'];
 };
